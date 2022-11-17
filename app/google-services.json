@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "890603435413",
+    "project_id": "ma-voiture-application-mobile",
+    "storage_bucket": "ma-voiture-application-mobile.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:890603435413:android:b08bc637eda5131f20729c",
+        "android_client_info": {
+          "package_name": "com.example.mavoitureapplicationmobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "890603435413-fr5d9t041noimvilda8g90mhagjfi1lm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChMR-hn0OPjZMSkiX-RB5_8gomMxW2kcE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "890603435413-fr5d9t041noimvilda8g90mhagjfi1lm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

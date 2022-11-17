@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Ma Voiture application mobile</string>
+    <string name="adresse_e_mail">Adresse e-mail</string>
+    <string name="mot_de_passe">Mot de passe</string>
+    <string name="se_connecter">Se connecter</string>
+    <string name="cr_er_nouveau_compte">Créer nouveau compte</string>
+</resources>
