@@ -17,10 +17,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class Login extends AppCompatActivity {
-
     Button createAccountBtn, loginBtn,forget_password_btn;
     EditText username, password;
     FirebaseAuth firebaseAuth;
@@ -36,21 +34,23 @@ public class Login extends AppCompatActivity {
         reset_alert = new AlertDialog.Builder(this);
         inflater = this.getLayoutInflater();
 
+
         createAccountBtn = findViewById(R.id.createAccountBtn);
         createAccountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getApplicationContext(),Register.class));
-
             }
         });
+
         username = findViewById(R.id.loginEmail);
         password = findViewById(R.id.loginPassword);
-        loginBtn = findViewById(R.id.login);
+        loginBtn = findViewById(R.id.loginbtn);
         forget_password_btn = findViewById(R.id.forget_passwor_btn);
         forget_password_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //               start alertdialog
                 View vs = inflater.inflate(R.layout.reset_pop, null);
 
                 reset_alert.setTitle("Réinitialiser le mot de passe oublié")
@@ -58,12 +58,13 @@ public class Login extends AppCompatActivity {
                         .setPositiveButton("reset", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-
+//      validation the mail address
                                 EditText email = vs.findViewById(R.id.rest_email_pop);
                                 if (email.getText().toString().isEmpty()){
                                     email.setError("Required Field");
                                     return;
                                 }
+//                                send the reset link
                                     firebaseAuth.sendPasswordResetEmail(email.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void unused) {

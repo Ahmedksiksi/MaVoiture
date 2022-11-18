@@ -75,6 +75,12 @@ public class Register extends AppCompatActivity {
             }
         });
 
-
+        gotoLogin = findViewById(R.id.gotoLogin);
+        gotoLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(),Login.class));
+            }
+        });
     }
 }
