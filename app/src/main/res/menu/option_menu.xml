@@ -10,4 +10,7 @@
     <item
         android:id="@+id/delete_account_menu"
         android:title="Delete ACCOUNT" />
+    <item
+        android:id="@+id/idLogOut"
+        android:title="Log Out" />
 </menu>

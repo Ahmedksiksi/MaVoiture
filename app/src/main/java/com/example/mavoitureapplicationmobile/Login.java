@@ -1,118 +1,88 @@
 package com.example.mavoitureapplicationmobile;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class Login extends AppCompatActivity {
 
-    Button createAccountBtn, loginBtn,forget_password_btn;
-    EditText username, password;
-    FirebaseAuth firebaseAuth;
-    AlertDialog.Builder reset_alert;
-    LayoutInflater inflater;
+public class Login extends AppCompatActivity {
+    private TextInputEditText userNameEdt, passwordEdt;
+    private Button loginBtn;
+    private TextView newUserTV;
+    private FirebaseAuth mAuth;
+    private ProgressBar loadingPB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        firebaseAuth = FirebaseAuth.getInstance();
-
-        reset_alert = new AlertDialog.Builder(this);
-        inflater = this.getLayoutInflater();
-
-        createAccountBtn = findViewById(R.id.createAccountBtn);
-        createAccountBtn.setOnClickListener(new View.OnClickListener() {
+        // initializing all our variables.
+        userNameEdt = findViewById(R.id.idEdtUserName);
+        passwordEdt = findViewById(R.id.idEdtPassword);
+        loginBtn = findViewById(R.id.idBtnLogin);
+        newUserTV = findViewById(R.id.idTVNewUser);
+        mAuth = FirebaseAuth.getInstance();
+        loadingPB = findViewById(R.id.idPBLoading);
+        // adding click listener for our new user tv.
+        newUserTV.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(),Register.class));
-
+            public void onClick(View v) {
+                // on below line opening a login activity.
+                Intent i = new Intent(Login.this, Register.class);
+                startActivity(i);
             }
         });
-        username = findViewById(R.id.loginEmail);
-        password = findViewById(R.id.loginPassword);
-        loginBtn = findViewById(R.id.login);
-        forget_password_btn = findViewById(R.id.forget_passwor_btn);
-        forget_password_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                View vs = inflater.inflate(R.layout.reset_pop, null);
 
-                reset_alert.setTitle("Réinitialiser le mot de passe oublié")
-                        .setMessage("Entrez votre email pour obtenir le lien de réinitialisation du mot de passe")
-                        .setPositiveButton("reset", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                                EditText email = vs.findViewById(R.id.rest_email_pop);
-                                if (email.getText().toString().isEmpty()){
-                                    email.setError("Required Field");
-                                    return;
-                                }
-                                    firebaseAuth.sendPasswordResetEmail(email.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void unused) {
-                                            Toast.makeText(Login.this, "Reset Email Sent",Toast.LENGTH_SHORT).show();
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(Login.this, e.getMessage(),Toast.LENGTH_SHORT).show();
-
-                                        }
-                                    });
-                            }
-                        }).setNegativeButton("Cancel",null)
-                        .setView(vs)
-                        .create().show();
-            }
-
-        });
-
-
-
-
+        // adding on click listener for our login button.
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                if(username.getText().toString().isEmpty()){
-                    username.setError("Saisissez votre prénom et votre nom ");
+            public void onClick(View v) {
+                // hiding our progress bar.
+                loadingPB.setVisibility(View.VISIBLE);
+                // getting data from our edit text on below line.
+                String email = userNameEdt.getText().toString();
+                String password = passwordEdt.getText().toString();
+                // on below line validating the text input.
+                if (TextUtils.isEmpty(email) && TextUtils.isEmpty(password)) {
+                    Toast.makeText(Login.this, "Please enter your credentials..", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(password.getText().toString().isEmpty()){
-                    password.setError("Saisissez votre adresse e-mail ");
-                    return;
-                }
-                firebaseAuth.signInWithEmailAndPassword(username.getText().toString(),password.getText().toString()).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                // on below line we are calling a sign in method and passing email and password to it.
+                mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onSuccess(AuthResult authResult) {
-
-                        startActivity(new Intent(getApplicationContext(),MainActivity.class));
-                        finish();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(Login.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        // on below line we are checking if the task is success or not.
+                        if (task.isSuccessful()) {
+                            // on below line we are hiding our progress bar.
+                            loadingPB.setVisibility(View.GONE);
+                            Toast.makeText(Login.this, "Login Successful..", Toast.LENGTH_SHORT).show();
+                            // on below line we are opening our mainactivity.
+                            Intent i = new Intent(Login.this, MainActivity.class);
+                            startActivity(i);
+                            finish();
+                        } else {
+                            // hiding our progress bar and displaying a toast message.
+                            loadingPB.setVisibility(View.GONE);
+                            Toast.makeText(Login.this, "Please enter valid user credentials..", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
-
             }
         });
     }
@@ -120,9 +90,15 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if(FirebaseAuth.getInstance().getCurrentUser()!= null){
-            startActivity(new Intent(getApplicationContext(),MainActivity.class));
-            finish();
+        // in on start method checking if
+        // the user is already sign in.
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            // if the user is not null then we are
+            // opening a main activity on below line.
+            Intent i = new Intent(Login.this, MainActivity.class);
+            startActivity(i);
+            this.finish();
         }
     }
 }
