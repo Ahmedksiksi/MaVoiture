@@ -22,9 +22,8 @@ public class Add_car extends AppCompatActivity {
     private Button addCarBtn;
     private TextInputEditText carModelEdt, carDescEdt, carPriceEdt, bestSuitedEdt, carImgEdt;
     FirebaseDatabase firebaseDatabase ;
-    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://ma-voiture-application-mobile-default-rtdb.firebaseio.com/");
-    private ProgressBar loadingPB;
-    private String carID;
+    DatabaseReference databaseReference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,40 +34,35 @@ public class Add_car extends AppCompatActivity {
         carPriceEdt = findViewById(R.id.idEdtCarPrice);
         bestSuitedEdt = findViewById(R.id.idEdtSuitedFor);
         carImgEdt = findViewById(R.id.idEdtCarImageLink);
-        loadingPB = findViewById(R.id.idPBLoading);
         firebaseDatabase = FirebaseDatabase.getInstance();
-        // on below line creating our database reference.
         databaseReference = firebaseDatabase.getReference("Car");
-        // adding click listener for our add course button.
         addCarBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadingPB.setVisibility(View.VISIBLE);
-                // getting data from our edit text.
                 String carModel= carModelEdt.getText().toString();
                 String carDesc = carDescEdt.getText().toString();
                 String carPrice = carPriceEdt.getText().toString();
                 String bestSuited = bestSuitedEdt.getText().toString();
                 String carImg = carImgEdt.getText().toString();
-                carID = carModel;
-                // on below line we are passing all data to our modal class.
-                CarRvModal carRvModal = new CarRvModal(carID, carModel, carDesc, carPrice, bestSuited, carImg);
-                // on below line we are calling a add value event
-                // to pass data to firebase database.
+                CarRvModal carRvModal = new CarRvModal();
+                carRvModal.setCarImg(carImg);
+                carRvModal.setCarModel(carModel);
+                carRvModal.setCarDescription(carDesc);
+                carRvModal.setCarPrice(carPrice);
+                carRvModal.setBestSuitedFor(bestSuited);
+
                 databaseReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        // on below line we are setting data in our firebase database.
-                        databaseReference.child(carID).setValue(carRvModal);
-                        // displaying a toast message.
+
+                        databaseReference.child(carModel).setValue(carRvModal);
+                        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"+carRvModal);
                         Toast.makeText(Add_car.this, "Car Added..", Toast.LENGTH_SHORT).show();
-                        // starting a main activity.
                         startActivity(new Intent(Add_car.this, MainActivity.class));
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        // displaying a failure message on below line.
                         Toast.makeText(Add_car.this, "Fail to add Car..", Toast.LENGTH_SHORT).show();
                     }
                 });

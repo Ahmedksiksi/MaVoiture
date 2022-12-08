@@ -1,16 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<!--    <item-->
+<!--        android:id="@+id/resetUserPassword"-->
+<!--        android:visible="true"-->
+<!--        android:title="Reset Password" />-->
+<!--    <item-->
+<!--        android:id="@+id/updateEmailMenu"-->
+<!--        android:visible="true"-->
+<!--        android:title="Update Email" />-->
+<!--    <item-->
+<!--        android:id="@+id/delete_account_menu"-->
+<!--        android:visible="true"-->
+<!--        android:title="Delete ACCOUNT" />-->
+<!--    <item-->
+<!--        android:id="@+id/idLogOut"-->
+<!--        android:visible="true"-->
+<!--        android:title="Log Out" />-->
 
     <item
-        android:id="@+id/resetUserPassword"
-        android:title="Reset Password" />
+        android:id="@+id/search_bar"
+        android:title="Search"
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="ifRoom|withText" />
     <item
-        android:id="@+id/updateEmailMenu"
-        android:title="Update Email" />
-    <item
-        android:id="@+id/delete_account_menu"
-        android:title="Delete ACCOUNT" />
-    <item
-        android:id="@+id/idLogOut"
-        android:title="Log Out" />
+        android:id="@+id/action_logout"
+        android:title="Log out"
+        android:visible="true"
+        app:showAsAction="never" />
 </menu>

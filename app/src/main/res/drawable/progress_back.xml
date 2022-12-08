@@ -6,21 +6,17 @@
     android:pivotY="50%"
     android:toDegrees="360">
 
-    <!--shape tag is used to
-        build a shape in XML-->
+
     <shape
         android:innerRadiusRatio="3"
         android:shape="ring"
         android:thicknessRatio="8"
         android:useLevel="false">
 
-        <!--set the size of the shape-->
         <size
             android:width="76dip"
             android:height="76dip" />
 
-        <!--set the color gradients
-            of the shape-->
         <gradient
             android:angle="0"
             android:endColor="#00ffffff"

@@ -16,7 +16,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!--edit text for adding a car name-->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/idTILCarModel"
                 style="@style/LoginTextInputLayoutStyle"
@@ -42,7 +41,6 @@
                     android:textSize="14sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!--edit text for adding a car price-->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/idTILCarPrice"
                 style="@style/LoginTextInputLayoutStyle"
@@ -70,7 +68,6 @@
                     app:boxStrokeColor="@color/purple_200" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!--edit text for adding a course best suited for-->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/idTILCarSuitedFor"
                 style="@style/LoginTextInputLayoutStyle"
@@ -96,7 +93,6 @@
                     android:textSize="14sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!--edit text for adding a course image link-->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/idTILCarImageLink"
                 style="@style/LoginTextInputLayoutStyle"
@@ -122,10 +118,6 @@
                     android:textSize="14sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
-
-
-
-            <!--edit text for adding a car description-->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/idTILCarDescription"
                 style="@style/LoginTextInputLayoutStyle"
@@ -157,7 +149,6 @@
                 android:orientation="horizontal"
                 android:weightSum="2">
 
-                <!--button for updating a new course-->
                 <Button
                     android:id="@+id/idBtnAddCar"
                     android:layout_width="0dp"
@@ -171,7 +162,6 @@
                     android:text="Update Your \n Car"
                     android:textAllCaps="false" />
 
-                <!--button for deleting a course-->
                 <Button
                     android:id="@+id/idBtnDeleteCar"
                     android:layout_width="0dp"
@@ -188,7 +178,6 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!--progress bar for displaying a loading indicator-->
         <ProgressBar
             android:id="@+id/idPBLoading"
             android:layout_width="wrap_content"

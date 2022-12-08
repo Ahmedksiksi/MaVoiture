@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black_shade_1"
+    android:background="@drawable/car2"
     tools:context=".Register">
 
     <com.google.android.material.textfield.TextInputLayout
@@ -18,7 +18,7 @@
         android:layout_marginEnd="20dp"
         android:hint="Enter User Name"
         android:padding="5dp"
-        android:textColorHint="@color/white"
+        android:textColorHint="@color/black_shade_1"
         app:hintTextColor="@color/white">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -33,7 +33,6 @@
             android:textSize="14sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!--edit text for user password-->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/idTILPassword"
         style="@style/LoginTextInputLayoutStyle"
@@ -45,7 +44,7 @@
         android:layout_marginEnd="20dp"
         android:hint="Enter Your Password"
         android:padding="5dp"
-        android:textColorHint="@color/white"
+        android:textColorHint="@color/black_shade_1"
         app:hintTextColor="@color/white">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -60,7 +59,6 @@
             android:textSize="14sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!--edit text for confirmation of user password-->
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/idTILConfirmPassword"
@@ -73,7 +71,7 @@
         android:layout_marginEnd="20dp"
         android:hint="Confirm Your Password"
         android:padding="5dp"
-        android:textColorHint="@color/white"
+        android:textColorHint="@color/black_shade_1"
         app:hintTextColor="@color/white">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -83,12 +81,12 @@
             android:ems="10"
             android:importantForAutofill="no"
             android:inputType="textPassword"
-            android:textColor="@color/white"
+            android:textColor="@color/black_shade_1"
             android:textColorHint="@color/white"
             android:textSize="14sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!--button for creating user account.-->
+
     <Button
         android:id="@+id/idBtnRegister"
         android:layout_width="match_parent"
@@ -101,8 +99,7 @@
         android:text="Register"
         android:textAllCaps="false" />
 
-    <!--text view for displaying a text on
-        clicking we will open a login page-->
+
     <TextView
         android:id="@+id/idTVLoginUser"
         android:layout_width="match_parent"
@@ -114,10 +111,9 @@
         android:text="Already a User ? Login Here"
         android:textAlignment="center"
         android:textAllCaps="false"
-        android:textColor="@color/white"
+        android:textColor="@color/black_shade_1"
         android:textSize="18sp" />
 
-    <!--progress bar as a loading indicator-->
     <ProgressBar
         android:id="@+id/idPBLoading"
         android:layout_width="wrap_content"

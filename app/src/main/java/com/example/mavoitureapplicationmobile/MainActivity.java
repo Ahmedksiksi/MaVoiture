@@ -1,221 +1,140 @@
 package com.example.mavoitureapplicationmobile;
 
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 
-public  class MainActivity extends AppCompatActivity implements  CarRVAdapter.CarClickInterface {
 
-    private RecyclerView carRV;
-    private ProgressBar loadingPB;
-    private FloatingActionButton addCarFAB;
-    private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference databaseReference;
-    private ArrayList <CarRvModal> carRvModalArrayList;
-    private RelativeLayout bottomSheetRL,homeRL;
-    private CarRVAdapter carRVAdapter;
-    private FirebaseAuth mAuth;
 
+public  class MainActivity extends AppCompatActivity {
+    private RecyclerView recyclerView;
+    CarRVAdapter adapter;
+    DatabaseReference mbase;
+    private FloatingActionButton idFABAddCar;
+    private ImageView idIVCar ;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // initializing all our variables.
-        carRV = findViewById(R.id.idRVCars);
-        homeRL = findViewById(R.id.idRLBSheet);
-        loadingPB = findViewById(R.id.idPBLoading);
-        addCarFAB = findViewById(R.id.idFABAddCar);
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        mAuth = FirebaseAuth.getInstance();
-        carRvModalArrayList = new ArrayList<>();
-        // on below line we are getting database reference.
-        databaseReference = firebaseDatabase.getReference("Cars");
-        // on below line adding a click listener for our floating action button.
-        addCarFAB.setOnClickListener(new View.OnClickListener() {
+        idFABAddCar = findViewById(R.id.idFABAddCar);
+        idIVCar= findViewById(R.id.idIVCar);
+        mbase = FirebaseDatabase.getInstance().getReference("Car");
+        idFABAddCar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // opening a new activity for adding a course.
-                Intent i = new Intent(MainActivity.this, Add_car.class);
+                Intent i= new Intent(MainActivity.this, Add_car.class);
                 startActivity(i);
             }
+
         });
-        // on below line initializing our adapter class.
-        carRVAdapter = new CarRVAdapter(carRvModalArrayList, this, this::onCourseClick);
-        // setting layout malinger to recycler view on below line.
-        carRV.setLayoutManager(new LinearLayoutManager(this));
-        // setting adapter to recycler view on below line.
-        carRV.setAdapter(carRVAdapter);
-        // on below line calling a method to fetch courses from database.
-        getCourses();
+
+
+        recyclerView = findViewById(R.id.idRVCars);
+
+        recyclerView.setLayoutManager(
+                new LinearLayoutManager(this));
+
+
+        FirebaseRecyclerOptions<CarRvModal> options
+                = new FirebaseRecyclerOptions.Builder<CarRvModal>()
+                .setQuery(mbase, CarRvModal.class)
+                .build();
+        adapter = new CarRVAdapter(options);
+        recyclerView.setAdapter(adapter);
+
     }
-
-    private void getCourses() {
-        // on below line clearing our list.
-        carRvModalArrayList.clear();
-        // on below line we are calling add child event listener method to read the data.
-        databaseReference.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                // on below line we are hiding our progress bar.
-                loadingPB.setVisibility(View.GONE);
-                // adding snapshot to our array list on below line.
-                carRvModalArrayList.add(snapshot.getValue(CarRvModal.class));
-                // notifying our adapter that data has changed.
-                carRVAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                // this method is called when new child is added
-                // we are notifying our adapter and making progress bar
-                // visibility as gone.
-                loadingPB.setVisibility(View.GONE);
-                carRVAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                // notifying our adapter when child is removed.
-                carRVAdapter.notifyDataSetChanged();
-                loadingPB.setVisibility(View.GONE);
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                // notifying our adapter when child is moved.
-                carRVAdapter.notifyDataSetChanged();
-                loadingPB.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
-    public void onCourseClick(int position) {
-        // calling a method to display a bottom sheet on below line.
-        displayBottomSheet(carRvModalArrayList.get(position));
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        // adding a click listener for option selected on below line.
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.idLogOut:
-                // displaying a toast message on user logged out inside on click.
-                Toast.makeText(getApplicationContext(), "User Logged Out", Toast.LENGTH_LONG).show();
-                // on below line we are signing out our user.
-                mAuth.signOut();
-                // on below line we are opening our login activity.
-                Intent i = new Intent(MainActivity.this, Login.class);
-                startActivity(i);
-                this.finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+    public void navigation(){
+        Intent i= new Intent(MainActivity.this, SheetLayout.class);
+        startActivity(i);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // on below line we are inflating our menu
-        // file for displaying our menu options.
-        getMenuInflater().inflate(R.menu.option_menu, menu);
-        return true;
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.option_menu, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
-    private void displayBottomSheet(CarRvModal modal) {
-        // on below line we are creating our bottom sheet dialog.
-        final BottomSheetDialog bottomSheetTeachersDialog = new BottomSheetDialog(this, R.style.BottomSheetDialogTheme);
-        // on below line we are inflating our layout file for our bottom sheet.
-        View layout = LayoutInflater.from(this).inflate(R.layout.bottom_sheet_layout, homeRL);
-        // setting content view for bottom sheet on below line.
-        bottomSheetTeachersDialog.setContentView(layout);
-        // on below line we are setting a cancelable
-        bottomSheetTeachersDialog.setCancelable(false);
-        bottomSheetTeachersDialog.setCanceledOnTouchOutside(true);
-        // calling a method to display our bottom sheet.
-        bottomSheetTeachersDialog.show();
-        // on below line we are creating variables for
-        // our text view and image view inside bottom sheet
-        // and initialing them with their ids.
-        TextView courseNameTV = layout.findViewById(R.id.idTVCArName);
-        TextView courseDescTV = layout.findViewById(R.id.idTVCarDesc);
-        TextView suitedForTV = layout.findViewById(R.id.idTVSuitedFor);
-        TextView priceTV = layout.findViewById(R.id.idTVCarPrice);
-        ImageView courseIV = layout.findViewById(R.id.idIVCar);
-        // on below line we are setting data to different views on below line.
-        courseNameTV.setText(modal.getCarModel());
-        courseDescTV.setText(modal.getCarDescription());
-        suitedForTV.setText("Suited for " + modal.getBestSuitedFor());
-        priceTV.setText("Rs." + modal.getCarPrice());
-        Picasso.get().load(modal.getCarImg()).into(courseIV);
-        Button viewBtn = layout.findViewById(R.id.idBtnVIewDetails);
-        Button editBtn = layout.findViewById(R.id.idBtnEditCar);
-
-        // adding on click listener for our edit button.
-        editBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // on below line we are opening our EditCourseActivity on below line.
-                Intent i = new Intent(MainActivity.this, Edit_car.class);
-                // on below line we are passing our course modal
-                i.putExtra("car", modal);
-                startActivity(i);
-            }
-        });
-        // adding click listener for our view button on below line.
-        viewBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // on below line we are navigating to browser
-                // for displaying course details from its url
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(modal.getCarId()));
-                startActivity(i);
-            }
-        });
-    }
 
     @Override
-    public void onCarClick(int position) {
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_logout) {
+            logout();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
+    public void onItemClick(int position) {
+        Intent intent = new Intent(MainActivity.this,Edit_car.class);
+startActivity(intent);
+    }
+    private void logout() {
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(MainActivity.this, Login.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+
+    @Override protected void onStart()
+    {
+        super.onStart();
+        adapter.startListening();
+    }
+    @Override protected void onStop()
+    {
+        super.onStop();
+        adapter.stopListening();
+    }
+    public void onButtonShowPopupWindowClick(View view) {
+
+        LayoutInflater inflater = (LayoutInflater)
+                getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.bottom_sheet_layout, null);
+
+        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        boolean focusable = true;
+        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+
+
+        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+
+        popupView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                popupWindow.dismiss();
+                return true;
+            }
+        });
     }
 }
